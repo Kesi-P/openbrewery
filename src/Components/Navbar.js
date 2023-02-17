@@ -26,7 +26,7 @@ export default function DenseAppBar() {
         <Toolbar >
           
           <Typography variant="h6" style={{display: "contents"}}>
-            <img src='https://www.openbrewerydb.org/favicon.ico' className={classes.img} /> List Breweries
+            <img src='https://www.openbrewerydb.org/favicon.png' className={classes.img} /> List Breweries
           </Typography>
         </Toolbar>
       </AppBar>
