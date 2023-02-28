@@ -1,15 +1,14 @@
-import './App.css';
 import React, { useState, useEffect } from "react";
-import Form from './Components/Form'
-import Datatable from './Components/Datatable/Datatable'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Typography from '@material-ui/core/Typography';
-import { dataContext } from './dataContext'
+import Form from '../Components/Form'
+import Datatable from '../Components/Datatable/Datatable'
+import LinearProgress from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography';
+import { dataContext } from '../dataContext'
 import { useSelector, useDispatch } from "react-redux";
-import { srtBrew, srtName, srtState,srtCity } from './Redux/brewActions'
-import Navbar from './Components/Navbar'
+import { srtBrew, srtName, srtState,srtCity } from '../Redux/brewActions'
+import Navbar from '../Components/Navbar'
 
-function App() {
+function Home() {
   const [query, setQuery] = useState({name:'',city:'',state:''})
   const [loading,setloading] = useState(false)
   const fetchData = useSelector((state) => state)
@@ -62,4 +61,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
