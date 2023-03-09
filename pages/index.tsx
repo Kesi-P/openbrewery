@@ -14,7 +14,7 @@ import { srtBrew, srtName, srtState,srtCity } from '../src/Redux/brewActions'
 import Navbar from '../src/Components/Navbar'
 import React, { useState, useEffect } from "react";
 import App  from './_app'
-import Home from '../src/Components/home'
+import Home from '../src/Components/Home'
 
 //const inter = Inter({ subsets: ['latin'] })
 
