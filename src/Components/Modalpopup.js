@@ -3,7 +3,9 @@ import { styled } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import Fade from '@mui/material/Fade';
-const useStyles = styled((theme) => ({
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -15,6 +17,7 @@ const useStyles = styled((theme) => ({
     border: '2px solid rgb(255,188,0)',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    zIndex: 1
   },
 }));
 

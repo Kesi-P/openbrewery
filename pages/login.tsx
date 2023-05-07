@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React,{ useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,16 +13,50 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { useRouter } from 'next/router';
+
 const theme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const [isValid, setIsValid] = useState(true);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const getdata = new FormData(event.currentTarget);
+    const data = {
+      email: getdata.get('email'),
+      password: getdata.get('password'),
+    };
+
+    const JSONdata = JSON.stringify(data)
+    const endpoint = '/api/login'
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    
+    const options = {
+      // The method is POST because we are sending data.
+      method: 'POST',
+      // Tell the server we're sending JSON.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONdata,
+    }
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options)
+
+    // Get the response data from server as JSON.
+    // If server returns the name submitted, that means the form works.
+    const result = await response.json()
+    alert(`Is this your full name: ${result.message}`)
+    if( `${result.message}` === `Login`){
+      console.log(localStorage.getItem('jwtToken'))
+      router.push('/');
+    }if( `${result.message}` === `Invalid`){
+      setIsValid(false)
+    }
+        
   };
 
   return (
@@ -75,6 +109,11 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+           <Typography component="h5" variant="h5"
+           error={!isValid}
+             helperText={!isValid ? 'Email address or Password is invalid' : ''}
+             >
+          </Typography>
             <Button
               type="submit"
               fullWidth
@@ -91,7 +130,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

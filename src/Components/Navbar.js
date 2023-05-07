@@ -16,7 +16,7 @@ export default function DenseAppBar() {
             <img src='https://www.openbrewerydb.org/favicon.png' className='nav img' /> List Breweries
           </Typography>
           <Button variant="outlined" style={{marginLeft: "auto"}} href= '/login'>
-            Outlined</Button>
+            Login</Button>
         </Toolbar>
       </AppBar>
     </div>
