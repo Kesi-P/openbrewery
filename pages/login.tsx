@@ -1,5 +1,4 @@
 import React,{ useState } from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -14,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useRouter } from 'next/router';
+import { colors } from '@mui/material';
 
 const theme = createTheme();
 
@@ -49,11 +49,11 @@ export default function Login() {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json()
-    alert(`Is this your full name: ${result.message}`)
+    //alert(`Is this your full name: ${result.message}`)
     if( `${result.message}` === `Login`){
       console.log(localStorage.getItem('jwtToken'))
       router.push('/');
-    }if( `${result.message}` === `Invalid`){
+    }else{
       setIsValid(false)
     }
         
@@ -71,10 +71,7 @@ export default function Login() {
             alignItems: 'center',
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
-          <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5">
             Sign in
           </Typography>
           <Box 
@@ -109,11 +106,12 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-           <Typography component="h5" variant="h5"
-           error={!isValid}
-             helperText={!isValid ? 'Email address or Password is invalid' : ''}
-             >
-          </Typography>
+             
+          {!isValid ?   
+          <Typography  variant="caption" display="block" gutterBottom style={{color:"red"}}>
+           Email address or Password is invalid          
+          </Typography> : ''} 
+
             <Button
               type="submit"
               fullWidth

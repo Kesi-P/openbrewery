@@ -1,7 +1,7 @@
 // Import required libraries
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import User from '../../models/users'
+const User = require('../../models/users')
 
 
 // Create a login API endpoint
@@ -14,14 +14,12 @@ export default async function handler(req, res) {
     const findUser = await User.findOne({ email}).exec();
     if( !findUser){
       const user = new User({ name: firstName + ' ' + lastName, email: email, password: hashedPassword });
-      user.save({ timeout: 30000 })
-        .then(savedUser => {
-          console.log('TTTTTTTTTTTTTTTTTTT');
-        })
-        .catch(err => {
-          console.error('ErorrrrSus',err);
-        });
-          res.status(200).json({ message: 'Login successful' })
+      user.save(function(err) {
+        if (err) throw err;
+        console.log('User saved successfully!');
+        res.status(200).json({ message: 'Login successful' })
+      });
+          
         
     }
     else{

@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react';
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
-import User from '../../models/users'
+
+//import User from '../../models/users'
+const User = require('../../models/users')
 
 // Create a secret key for JWT
 const JWT_SECRET = 'mysecretkey'
@@ -11,11 +13,11 @@ const JWT_SECRET = 'mysecretkey'
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body
-    console.log(req.body)
+   // console.log(req.body)
     const hashedPassword = bcrypt.hashSync(password);
     const isMatch = bcrypt.compareSync(password, hashedPassword);
     // TODO: Query your database to validate user credentials
-     const user = await User.findOne({ email }, { password:isMatch })
+     const user = await User.findOne({ email }, { password:isMatch }).exec();
 
     // Check if user exists and password is valid
     if (!user || !isMatch) {
