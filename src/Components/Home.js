@@ -7,7 +7,9 @@ import { dataContext } from '../dataContext'
 import { useSelector, useDispatch } from "react-redux";
 import { srtBrew, srtName, srtState,srtCity } from '../Redux/brewActions'
 import Navbar from '../Components/Navbar'
-
+//import {protectedEndpoint} from '../../pages/api/login'
+//import { request, response } from "express";
+//const authen = require('../../pages/api/authenticateToken')
 function Home() {
   const [query, setQuery] = useState({name:'',city:'',state:''})
   const [loading,setloading] = useState(false)
@@ -35,6 +37,9 @@ function Home() {
     }
     setloading(false);
   }, [dispatch, query]);
+
+ 
+  //protectedEndpoint()
   
   return (
     <div className='appbody'>

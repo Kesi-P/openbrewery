@@ -1,17 +1,20 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
-import Login from './login'
-import Link from 'next/link'
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
-  // const router = useRouter()
-  
-  // return (
-  // <>
-  // <h1>Path :- {router.asPath} </h1>
-  // <Link href="/login">About Us</Link>
-  // </>
-  // )
+
+import '../styles/globals.css'
+import { SessionProvider } from 'next-auth/react';
+
+function App({ Component, pageProps }) {
+  return (
+    <SessionProvider session={pageProps.session}
+   // basePath="login"
+      // Re-fetch session every 5 minutes
+      // refetchInterval={1 * 60}
+      // // Re-fetches session when window is focused
+      // refetchOnWindowFocus={false}
+    >
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
 }
+
+export default App;

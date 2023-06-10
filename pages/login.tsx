@@ -1,4 +1,5 @@
-import React,{ useState } from 'react';
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -7,56 +8,34 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-//import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { useRouter } from 'next/router';
-import { colors } from '@mui/material';
 
-const theme = createTheme();
-
-export default function Login() {
-  const router = useRouter();
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(true);
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const getdata = new FormData(event.currentTarget);
-    const data = {
-      email: getdata.get('email'),
-      password: getdata.get('password'),
-    };
 
-    const JSONdata = JSON.stringify(data)
-    const endpoint = '/api/login'
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    
-    const options = {
-      // The method is POST because we are sending data.
-      method: 'POST',
-      // Tell the server we're sending JSON.
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
-    }
+  const theme = createTheme();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    // Send the form data to our forms API on Vercel and get a response.
-    const response = await fetch(endpoint, options)
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false
+    });
 
-    // Get the response data from server as JSON.
-    // If server returns the name submitted, that means the form works.
-    const result = await response.json()
-    //alert(`Is this your full name: ${result.message}`)
-    if( `${result.message}` === `Login`){
-      console.log(localStorage.getItem('jwtToken'))
-      router.push('/');
-    }else{
+    if (!result.error) {
+      // Successful login, redirect to protected page
+      window.location.href = '/';
+    } else {
+      // Handle login error
+      console.error('Login failed:', result.error);
       setIsValid(false)
     }
-        
   };
 
   return (
@@ -90,6 +69,8 @@ export default function Login() {
               autoComplete="email"
               autoFocus
               variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -101,6 +82,8 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               variant="outlined"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

@@ -15,24 +15,29 @@ export default async function handler(req, res) {
     const { email, password } = req.body
    // console.log(req.body)
     const hashedPassword = bcrypt.hashSync(password);
-    const isMatch = bcrypt.compareSync(password, hashedPassword);
+    // const isMatch = bcrypt.compareSync(password, hashedPassword);
     // TODO: Query your database to validate user credentials
-     const user = await User.findOne({ email }, { password:isMatch }).exec();
-
+    const user = await User.findOne({ email }).exec();
+    const isMatch = bcrypt.compareSync(password, user.password);
+    
+     //const username = await 
     // Check if user exists and password is valid
+    console.log('user',user,isMatch,hashedPassword)
     if (!user || !isMatch) {
       res.status(401).json({ message: 'Invalid' })
       return
     }
-
-    // Create a JWT token
-    const token = jwt.sign({ username:'kesip' }, JWT_SECRET, { expiresIn: '1d' })
+    if (user && isMatch){
+      var userLog = user
+      const token = jwt.sign({ username:'kesip' }, JWT_SECRET, { expiresIn: '1d' })
     
-    
-   // Set the token in a HttpOnly cookie and send response
+    // Set the token in a HttpOnly cookie and send response
     res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; SameSite=Strict`)
     
-    res.status(200).json({ message: 'Login' })
+    res.status(200).json({ message: 'Login' ,user: userLog.name})
+    }
+    // Create a JWT token
+    
   } else {
     res.status(405).json({ message: 'Method not allowed' })
   }
@@ -46,7 +51,8 @@ export const withAuth = (handler) => async (req, res) => {
   // Verify the token and extract user ID
   try {
     const decoded = jwt.verify(token, JWT_SECRET)
-    req.userId = decoded.userId
+    //req.userId = decoded.userId
+    console.log('kjj',req,decoded)
     return handler(req, res)
   } catch (err) {
     res.status(401).json({ message: 'Unauthorized' })
@@ -56,6 +62,7 @@ export const withAuth = (handler) => async (req, res) => {
 // Example protected API endpoint
 export const protectedEndpoint = withAuth(async (req, res) => {
   // Only accessible with valid token
+  console.log('ko')
   res.status(200).json({ message: 'Protected endpoint' })
   return true
 })
