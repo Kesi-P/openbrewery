@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "models/users.js", "models/users.js", "db.js", "jwt.js"  ],
+, "models/users.js", "models/users.js", "db.js", "jwt.js", "pages/api/auth/nextAuth.js", "pages/api/auth/[...nextauth].js"  ],
   "exclude": [
     "node_modules"
   ]

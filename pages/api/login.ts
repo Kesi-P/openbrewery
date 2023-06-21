@@ -13,16 +13,10 @@ const JWT_SECRET = 'mysecretkey'
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body
-   // console.log(req.body)
-    const hashedPassword = bcrypt.hashSync(password);
-    // const isMatch = bcrypt.compareSync(password, hashedPassword);
-    // TODO: Query your database to validate user credentials
     const user = await User.findOne({ email }).exec();
     const isMatch = bcrypt.compareSync(password, user.password);
     
-     //const username = await 
-    // Check if user exists and password is valid
-    console.log('user',user,isMatch,hashedPassword)
+    console.log('user',user,isMatch)
     if (!user || !isMatch) {
       res.status(401).json({ message: 'Invalid' })
       return
