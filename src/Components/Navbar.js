@@ -11,7 +11,7 @@ import { signOut } from "next-auth/react"
 
 export default function DenseAppBar() {
   const { data: session, status } = useSession({});
- 
+ console.log('ses',session)
 return (
     <div className='navroot'>
       <AppBar position="static" className='navbg'>

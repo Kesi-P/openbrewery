@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from 'bcryptjs'
+import { signIn } from 'next-auth/react';
+import GoogleProvider from "next-auth/providers/google";
 
 const User = require('../../../models/users')
 const JWT_SECRET = process.env.NEXTAUTH_SECRET;
@@ -28,15 +30,37 @@ export default NextAuth({
               } else {
               return Promise.resolve(null);
               }
+            
           
         },
         
       }),
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET
+      })
     ],
     pages: {
-      signIn: '/login'
+      signIn: '/login',
+     
     },
     callbacks:{
+      // async signIn({user, account, profile}){
+      //   console.log('account',user,user.email,user.password,user.id, account)
+      //   const email = user.email;
+      //   //const password = user.password
+      //   const finduser = await User.findOne({ email }).exec();
+      //   //const isMatch = bcrypt.compareSync(password, finduser.password);
+      //   if (finduser && (user.id === account.providerAccountId)){return true}
+      //   else{return true}
+        
+      // },
+      async signIn({ account, profile }) {
+        if (account.provider === "google") {
+          return profile.email && profile.email.endsWith("@example.com")
+        }
+        return true // Do different verification for other providers that don't have `email_verified`
+      },
       async jwt({token,user}){
         
         return {...token, ...user}

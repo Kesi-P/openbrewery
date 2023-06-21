@@ -1,4 +1,5 @@
 import React,{ useState } from 'react';
+import { signIn } from 'next-auth/react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,13 +13,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { useSession } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 
 const theme = createTheme();
 
 export default function Register() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [firstName, setfirstNAme] = useState("");
   const [lastName, setlastName] = useState('');
   const [email, setEmail] = useState('');
@@ -28,13 +31,13 @@ export default function Register() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
     const data = {
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password
     };
-
     const JSONdata = JSON.stringify(data)
     const endpoint = '/api/register'
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -61,13 +64,24 @@ export default function Register() {
       setIsValid(false)
     }else{
       setIsValid(true)
-      router.push('/');
+     const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false
+      });
+  
+      if (!result.error) {
+        // Successful login, redirect to protected page
+        console.log('login',result)
+        window.location.href = '/';
+      } else {
+        // Handle login error
+        console.error('Login failed:', result.error);
+      }
     }
   };
   function handleChanged(event) {
     const target = event.target;
-    //const fistname = target.name;
-    //const value = target.name === 'firstName' ? target.value : 'Invalid';
     switch(target.name) {
       case 'firstName':
         setfirstNAme(target.value.toString())
@@ -83,21 +97,9 @@ export default function Register() {
         setEmail(newEmail);
         setIsValid(emailPattern.test(newEmail));
         break;
-      // default:
-        // code block
-    }
-    //console.log('value',value)
-    // Update the state of the form based on the changed input
-    // this.setState({
-    //   [name]: value
-    // });
+    }   
   }
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
-    setEmail(newEmail);
-    setIsValid(emailPattern.test(newEmail));
-  };
-
+ 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -170,12 +172,7 @@ export default function Register() {
                   onChange={handleChanged}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
+              
             </Grid>
             <Button
               type="submit"
@@ -185,7 +182,7 @@ export default function Register() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container>
               <Grid item>
                 <Link href="/login" variant="body2">
                   Already have an account? Sign in

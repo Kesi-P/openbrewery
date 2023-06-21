@@ -30,6 +30,7 @@ export default function LoginPage() {
 
     if (!result.error) {
       // Successful login, redirect to protected page
+      console.log('login',result)
       window.location.href = '/';
     } else {
       // Handle login error
@@ -85,11 +86,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-             
+                         
           {!isValid ?   
           <Typography  variant="caption" display="block" gutterBottom style={{color:"red"}}>
            Email address or Password is invalid          
@@ -105,11 +102,7 @@ export default function LoginPage() {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+              
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
