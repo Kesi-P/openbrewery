@@ -22,13 +22,13 @@ return (
           </Typography>
           
           
-          { session?.user ? <><Typography vvariant="h6" style={{ display: "block", marginLeft: "auto"}}>
+        {/* { session?.user ? <><Typography vvariant="h6" style={{ display: "block", marginLeft: "auto"}}>
               Welcome, {session.user.name}
           </Typography><Button variant="outlined" style={{marginLeft: "2em"}} onClick={() => signOut()}>Sign out</Button></>
           :
           <Button variant="outlined" style={{marginLeft: "auto"}} href= '/login'>
           Login</Button>
-          }
+          */} 
           
         </Toolbar>
       </AppBar>
